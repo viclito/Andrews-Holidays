@@ -239,7 +239,7 @@ export function BookingForm({ options, defaultPackageId }: BookingFormProps) {
         disabled={isSubmitting}
         className="w-full rounded-full bg-primary-600 py-3 text-sm font-semibold text-white hover:bg-primary-500 disabled:opacity-60"
       >
-        {isSubmitting ? "Redirecting…" : "Proceed to Stripe Checkout"}
+        {isSubmitting ? "Redirecting…" : "Confirm your booking"}
       </button>
     </form>
   );

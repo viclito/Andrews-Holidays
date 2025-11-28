@@ -22,8 +22,8 @@ export function LayoutWrapper({ children }: LayoutWrapperProps) {
     <>
       <SiteHeader />
       <main className="flex-1">
-        <div className="container py-16 space-y-16">{children}</div>
-        <div className="container pb-16">
+        <div className="container py-8 space-y-8">{children}</div>
+        <div className="container pb-8">
           <CtaBanner />
         </div>
       </main>

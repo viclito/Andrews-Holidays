@@ -1,65 +1,237 @@
-import Image from "next/image";
+import Link from "next/link";
+import { PackageCard } from "@/components/cards/PackageCard";
+import { getFeaturedPackages } from "@/lib/data/package-service";
+import { fallbackPackages } from "@/data/fallback-packages";
+import { auth } from "@/auth";
+import { FadeIn, StaggerContainer, staggerItem, MotionDiv } from "@/components/animations/FadeIn";
+import { ScrollShowcase } from "@/components/animations/ScrollShowcase";
 
-export default function Home() {
+const stats = [
+  { label: "Destinations", value: "50+" },
+  { label: "Happy Travelers", value: "10K+" },
+  { label: "Success Rate", value: "99%" },
+];
+
+export default async function Home() {
+  const session = await auth();
+  const packages =
+    (await getFeaturedPackages(6).catch(() => [])) ?? fallbackPackages;
+  const featured = packages.length ? packages : fallbackPackages;
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="bg-white">
+      {/* Hero Section - Apple Style */}
+      <section className="relative h-screen w-full overflow-hidden text-white">
+        {/* Background Video */}
+        <div className="absolute inset-0">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="h-full w-full object-cover"
           >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+            <source
+              src="https://www.pexels.com/download/video/4073979/"
+              type="video/mp4"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+            Your browser does not support the video tag.
+          </video>
+          {/* Dark Overlay */}
+          <div className="absolute inset-0 bg-black/10" />
         </div>
-      </main>
+
+        {/* Content */}
+        <div className="relative z-10 flex h-full flex-col justify-center">
+          <div className="container mx-auto px-6">
+            <div className="mx-auto max-w-4xl text-center">
+              <FadeIn delay={0.2}>
+                <h1 className="mb-6 text-5xl font-semibold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+                  Discover South India.
+                  <br />
+                  <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
+                    Like never before.
+                  </span>
+                </h1>
+              </FadeIn>
+              <FadeIn delay={0.4}>
+                <p className="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-gray-200 md:text-2xl">
+                  Curated travel experiences across Kerala, Tamil Nadu, Karnataka, and Goa.
+                </p>
+              </FadeIn>
+              <FadeIn delay={0.6}>
+                <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+                  <Link
+                    href="/packages"
+                    className="btn-apple btn-primary w-full sm:w-auto"
+                  >
+                    Explore Packages
+                  </Link>
+                  {!session ? (
+                    <Link
+                      href="/customer/register"
+                      className="btn-apple border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto"
+                    >
+                      Get Started
+                    </Link>
+                  ) : (
+                    <Link
+                      href={session.user.userType === "admin" ? "/dashboard" : "/customer/dashboard"}
+                      className="btn-apple border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto"
+                    >
+                      Go to Dashboard
+                    </Link>
+                  )}
+                </div>
+              </FadeIn>
+            </div>
+          </div>
+
+          {/* Stats Bar - Pushed to bottom */}
+          <div className="absolute bottom-0 w-full border-t border-white/10 bg-white/5 backdrop-blur-xl">
+            <div className="container mx-auto px-6 py-8">
+              <StaggerContainer className="grid grid-cols-3 gap-8 text-center">
+                {stats.map((stat) => (
+                  <MotionDiv key={stat.label} variants={staggerItem}>
+                    <div className="text-3xl font-semibold md:text-4xl">{stat.value}</div>
+                    <div className="mt-1 text-sm text-gray-300">{stat.label}</div>
+                  </MotionDiv>
+                ))}
+              </StaggerContainer>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Scroll Showcase Section */}
+      <ScrollShowcase />
+
+      {/* Featured Section */}
+      <section className="bg-gray-50 py-20 md:py-28">
+        <div className="container mx-auto px-6">
+          <FadeIn>
+            <div className="mb-12 text-center">
+              <h2 className="mb-4 text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
+                Featured Experiences
+              </h2>
+              <p className="mx-auto max-w-2xl text-xl text-gray-600">
+                Hand-picked journeys that showcase the best of South India
+              </p>
+            </div>
+          </FadeIn>
+
+          <StaggerContainer className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {featured.map((pkg) => (
+              <MotionDiv key={pkg.slug} variants={staggerItem}>
+                <PackageCard
+                  slug={pkg.slug!}
+                  title={pkg.title!}
+                  heroImage={pkg.heroImage ?? "/images/placeholder.jpg"}
+                  region={pkg.region!}
+                  duration={pkg.duration!}
+                  priceFrom={pkg.priceFrom!}
+                  tags={pkg.tags ?? []}
+                  summary={pkg.summary!}
+                />
+              </MotionDiv>
+            ))}
+          </StaggerContainer>
+
+          <FadeIn delay={0.4}>
+            <div className="mt-12 text-center">
+              <Link
+                href="/packages"
+                className="inline-flex items-center gap-2 text-lg font-medium text-primary-500 hover:text-primary-600"
+              >
+                View all packages
+                <svg className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                </svg>
+              </Link>
+            </div>
+          </FadeIn>
+        </div>
+      </section>
+
+      {/* Features Section */}
+      <section className="py-20 md:py-28">
+        <div className="container mx-auto px-6">
+          <StaggerContainer className="grid gap-16 lg:grid-cols-3">
+            <MotionDiv variants={staggerItem} className="text-center">
+              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary-100">
+                <svg className="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+              </div>
+              <h3 className="mb-3 text-2xl font-semibold">Instant Booking</h3>
+              <p className="text-lg text-gray-600">
+                Real-time availability and instant confirmations for all packages
+              </p>
+            </MotionDiv>
+
+            <MotionDiv variants={staggerItem} className="text-center">
+              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary-100">
+                <svg className="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" />
+                </svg>
+              </div>
+              <h3 className="mb-3 text-2xl font-semibold">Curated Experiences</h3>
+              <p className="text-lg text-gray-600">
+                Hand-picked destinations and authentic local experiences
+              </p>
+            </MotionDiv>
+
+            <MotionDiv variants={staggerItem} className="text-center">
+              <div className="mb-6 inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary-100">
+                <svg className="h-8 w-8 text-primary-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                </svg>
+              </div>
+              <h3 className="mb-3 text-2xl font-semibold">24/7 Support</h3>
+              <p className="text-lg text-gray-600">
+                On-ground assistance across all South Indian states
+              </p>
+            </MotionDiv>
+          </StaggerContainer>
+        </div>
+      </section>
+
+      {/* CTA Section */}
+      <section className="bg-gray-900 py-20 text-white md:py-28">
+        <div className="container mx-auto px-6 text-center">
+          <FadeIn>
+            <h2 className="mb-6 text-4xl font-semibold tracking-tight md:text-5xl lg:text-6xl">
+              Ready to explore?
+            </h2>
+            <p className="mx-auto mb-10 max-w-2xl text-xl text-gray-400">
+              Join thousands of travelers who have discovered the beauty of South India
+            </p>
+            <div className="flex flex-col items-center justify-center gap-4 sm:flex-row">
+              <Link
+                href="/packages"
+                className="btn-apple bg-white text-gray-900 hover:bg-gray-100 w-full sm:w-auto"
+              >
+                Browse Packages
+              </Link>
+              {!session ? (
+                    <Link
+                      href="/customer/register"
+                      className="btn-apple border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto"
+                    >
+                      Get Started
+                    </Link>
+                  ) : (
+                    <Link
+                      href={session.user.userType === "admin" ? "/dashboard" : "/customer/dashboard"}
+                      className="btn-apple border-2 border-white/20 bg-white/10 text-white hover:bg-white/20 w-full sm:w-auto"
+                    >
+                      Go to Dashboard
+                    </Link>
+                  )}
+            </div>
+          </FadeIn>
+        </div>
+      </section>
     </div>
   );
 }

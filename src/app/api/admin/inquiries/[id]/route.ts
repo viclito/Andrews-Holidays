@@ -1,0 +1,74 @@
+import { NextResponse } from "next/server";
+import { z } from "zod";
+import { Resend } from "resend";
+import { auth } from "@/auth";
+import { dbConnect } from "@/lib/mongodb";
+import { Inquiry } from "@/models/Inquiry";
+
+const statusSchema = z.object({
+  status: z.enum(["new", "contacted", "converted"]),
+});
+
+export async function PATCH(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const { id } = await params;
+  const session = await auth();
+  if (!session) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+  try {
+    const json = await request.json();
+    const payload = statusSchema.parse(json);
+    await dbConnect();
+    const updated = await Inquiry.findByIdAndUpdate(
+      id,
+      { status: payload.status },
+      { new: true }
+    );
+
+    // Send email notification
+    if (updated && process.env.RESEND_API_KEY) {
+      console.log(`Attempting to send status update email to: ${updated.email}`);
+      try {
+        const resend = new Resend(process.env.RESEND_API_KEY);
+        const { data, error } = await resend.emails.send({
+          from: "Andrews Holiday Updates <onboarding@resend.dev>",
+          to: updated.email,
+          subject: `Update on your inquiry: ${updated.packageTitle || "General Inquiry"}`,
+          html: `
+            <h2>Hello ${updated.fullName},</h2>
+            <p>The status of your inquiry regarding <strong>${updated.packageTitle || "your request"}</strong> has been updated.</p>
+            <p><strong>New Status:</strong> ${payload.status.charAt(0).toUpperCase() + payload.status.slice(1)}</p>
+            <br/>
+            <p>If you have any questions, please reply to this email.</p>
+            <p>Best regards,<br/>Andrews Holiday Team</p>
+          `,
+        });
+
+        if (error) {
+          console.error("Resend API returned error:", error);
+        } else {
+          console.log("Resend API success:", data);
+        }
+      } catch (emailError) {
+        console.error("Failed to send status update email (exception):", emailError);
+        // We don't fail the request if email fails, just log it
+      }
+    } else {
+      console.log("Skipping email: updated object missing or RESEND_API_KEY missing");
+      if (!process.env.RESEND_API_KEY) console.log("RESEND_API_KEY is missing");
+    }
+
+    return NextResponse.json(updated);
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({ error: error.issues }, { status: 400 });
+    }
+    return NextResponse.json({ error: "Unable to update inquiry" }, { status: 500 });
+  }
+}
+
+
+

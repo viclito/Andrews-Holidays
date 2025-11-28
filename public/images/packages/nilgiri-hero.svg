@@ -1,0 +1,12 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="nilgiri" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#1d4ed8"/>
+      <stop offset="100%" stop-color="#93c5fd"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#nilgiri)"/>
+  <path d="M0 480 L160 360 L320 430 L480 300 L640 420 L800 320 L800 600 L0 600 Z" fill="rgba(255,255,255,0.35)"/>
+  <text x="60" y="120" font-size="48" fill="white" font-family="Playfair Display, serif">Nilgiri Highlands</text>
+</svg>
+

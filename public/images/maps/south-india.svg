@@ -1,0 +1,17 @@
+<svg width="800" height="600" viewBox="0 0 800 600" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="map" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#083344"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="600" fill="url(#map)"/>
+  <path d="M480 80 L520 140 L540 220 L520 360 L500 440 L540 520 L520 560 L440 520 L400 480 L360 400 L320 280 L300 200 L340 120 Z" fill="rgba(255,255,255,0.2)" stroke="rgba(255,255,255,0.6)" stroke-width="4"/>
+  <circle cx="520" cy="140" r="10" fill="#fde047"/>
+  <circle cx="500" cy="440" r="10" fill="#f97316"/>
+  <circle cx="360" cy="400" r="10" fill="#38bdf8"/>
+  <text x="560" y="150" fill="white" font-size="18" font-family="Inter, sans-serif">Chennai</text>
+  <text x="540" y="460" fill="white" font-size="18" font-family="Inter, sans-serif">Kochi</text>
+  <text x="380" y="420" fill="white" font-size="18" font-family="Inter, sans-serif">Mysuru</text>
+</svg>
+

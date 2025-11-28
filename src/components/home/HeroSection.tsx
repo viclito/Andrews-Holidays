@@ -57,11 +57,11 @@ export function HeroSection({ session }: HeroSectionProps) {
         </div>
 
         {/* Content */}
-        <div className="relative z-10 flex h-full flex-col justify-center">
+        <div className="relative z-10 flex h-full flex-col justify-center pb-32 md:pb-0">
           <div className="container mx-auto px-6">
             <div className="mx-auto max-w-4xl text-center">
               <FadeIn delay={0.2}>
-                <h1 className="mb-6 text-5xl font-semibold leading-tight tracking-tight md:text-6xl lg:text-7xl">
+                <h1 className="mb-4 text-4xl font-semibold leading-tight tracking-tight md:mb-6 md:text-6xl lg:text-7xl">
                   Discover South India.
                   <br />
                   <span className="bg-gradient-to-r from-blue-400 to-cyan-400 bg-clip-text text-transparent">
@@ -70,7 +70,7 @@ export function HeroSection({ session }: HeroSectionProps) {
                 </h1>
               </FadeIn>
               <FadeIn delay={0.4}>
-                <p className="mx-auto mb-10 max-w-2xl text-xl leading-relaxed text-gray-200 md:text-2xl">
+                <p className="mx-auto mb-8 max-w-2xl text-lg leading-relaxed text-gray-200 md:mb-10 md:text-2xl">
                   Curated travel experiences across Kerala, Tamil Nadu, Karnataka, and Goa.
                 </p>
               </FadeIn>

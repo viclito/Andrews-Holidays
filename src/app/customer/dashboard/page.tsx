@@ -13,7 +13,7 @@ type Booking = {
   travellers: { fullName: string }[];
   totalAmount: number;
   currency: string;
-  status: "pending" | "confirmed" | "cancelled";
+  status: "pending" | "confirmed" | "cancelled" | "completed";
   createdAt: string;
 };
 
@@ -52,6 +52,7 @@ export default function CustomerDashboardPage() {
   const getStatusBadge = (status: string) => {
     const styles = {
       confirmed: "bg-emerald-100 text-emerald-700 border-emerald-200",
+      completed: "bg-blue-100 text-blue-700 border-blue-200",
       converted: "bg-emerald-100 text-emerald-700 border-emerald-200",
       pending: "bg-amber-100 text-amber-700 border-amber-200",
       new: "bg-blue-100 text-blue-700 border-blue-200",
@@ -145,7 +146,7 @@ export default function CustomerDashboardPage() {
                       </div>
                     </div>
                     
-                    {booking.status === "confirmed" && new Date(booking.endDate) < new Date() && (
+                    {((booking.status === "confirmed" && new Date(booking.endDate) < new Date()) || booking.status === "completed") && (
                       <div className="mt-4 border-t border-gray-100 pt-4">
                         <span className="text-sm font-medium text-primary-600 hover:text-primary-700">
                           Write a Review &rarr;

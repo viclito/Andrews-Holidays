@@ -44,7 +44,7 @@ const bookingSchema = new Schema<BookingType>(
     currency: { type: String, default: "INR" },
     status: {
       type: String,
-      enum: ["pending", "confirmed", "cancelled"],
+      enum: ["pending", "confirmed", "cancelled", "completed"],
       default: "pending",
     },
     paymentIntentId: String,

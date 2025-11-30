@@ -1,6 +1,8 @@
-import Link from "next/link";
 import { auth } from "@/auth";
-import { SignOutButton } from "@/components/dashboard/SignOutButton";
+import { dbConnect } from "@/lib/mongodb";
+import { Booking } from "@/models/Booking";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { BookingStatusReminder } from "@/components/dashboard/BookingStatusReminder";
 
 const navItems = [
   { label: "Overview", href: "/dashboard" },
@@ -16,39 +18,23 @@ export default async function DashboardLayout({
 }) {
   const session = await auth();
 
+  await dbConnect();
+  const pastBookings = await Booking.find({
+    endDate: { $lt: new Date() },
+    status: "confirmed",
+  })
+    .select("packageTitle startDate endDate travellers status")
+    .lean();
+
   return (
-    <div className="flex min-h-screen bg-slate-50">
-      <aside className="hidden w-64 flex-col border-r border-slate-200 bg-white p-6 lg:flex">
-        <div className="flex items-center gap-2">
-          <img src="/andr-logo.jpeg" alt="Andrews Holiday" className="h-8 w-auto" />
-          <div>
-            <p className="font-display text-2xl text-primary-600">Andrews Holiday</p>
-            <p className="mt-1 text-xs uppercase tracking-[0.4em] text-slate-400">
-              Agency Console
-            </p>
-          </div>
+    <div className="min-h-screen bg-slate-50">
+      <BookingStatusReminder bookings={JSON.parse(JSON.stringify(pastBookings))} />
+      <DashboardSidebar navItems={navItems} user={session?.user || {}} />
+      <main className="lg:pl-64">
+        <div className="px-4 py-6 sm:px-6 lg:px-8 lg:py-10">
+          {children}
         </div>
-        <nav className="mt-8 flex flex-col gap-2 text-sm font-semibold text-slate-600">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="rounded-2xl px-3 py-2 transition hover:bg-slate-100"
-            >
-              {item.label}
-            </Link>
-          ))}
-        </nav>
-        <div className="mt-auto rounded-2xl border border-slate-100 bg-slate-50 p-3 text-xs text-slate-500 space-y-1">
-          <p className="font-semibold text-slate-700">{session?.user?.name}</p>
-          <p>{session?.user?.email}</p>
-          <p className="uppercase tracking-[0.3em] text-primary-500">
-            {session?.user?.role}
-          </p>
-          <SignOutButton />
-        </div>
-      </aside>
-      <main className="flex-1 p-6 lg:p-10">{children}</main>
+      </main>
     </div>
   );
 }

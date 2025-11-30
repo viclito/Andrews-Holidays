@@ -10,7 +10,7 @@ export default async function DashboardPackagesPage() {
     <div className="space-y-6">
       <div>
         <p className="section-heading">Packages</p>
-        <h1 className="font-display text-4xl text-midnight">
+        <h1 className="font-display text-2xl md:text-4xl text-midnight">
           Manage signature departures
         </h1>
         <p className="text-sm text-slate-500">

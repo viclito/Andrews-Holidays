@@ -10,7 +10,7 @@ export default async function DashboardInquiriesPage() {
     <div className="space-y-6">
       <div>
         <p className="section-heading">Inquiries</p>
-        <h1 className="font-display text-4xl text-midnight">
+        <h1 className="font-display text-2xl md:text-4xl text-midnight">
           Respond to leads quickly
         </h1>
       </div>

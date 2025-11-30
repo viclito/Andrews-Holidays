@@ -6,7 +6,7 @@ import { dbConnect } from "@/lib/mongodb";
 import { Booking } from "@/models/Booking";
 
 const statusSchema = z.object({
-  status: z.enum(["pending", "confirmed", "cancelled"]),
+  status: z.enum(["pending", "confirmed", "cancelled", "completed"]),
 });
 
 export async function PATCH(

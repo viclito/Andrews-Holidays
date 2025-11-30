@@ -10,7 +10,7 @@ export default async function DashboardBookingsPage() {
     <div className="space-y-6">
       <div>
         <p className="section-heading">Bookings</p>
-        <h1 className="font-display text-4xl text-midnight">
+        <h1 className="font-display text-2xl md:text-4xl text-midnight">
           Track upcoming departures
         </h1>
       </div>
